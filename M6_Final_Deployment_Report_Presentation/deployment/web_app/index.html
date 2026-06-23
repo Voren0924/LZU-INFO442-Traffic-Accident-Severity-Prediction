@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Traffic Accident Severity Dashboard</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Realtime and navigation panel">
+      <div class="brand-card glass-card">
+        <div class="brand-mark">TA</div>
+        <div>
+          <p class="eyebrow">Crash severity</p>
+          <h1>Traffic Accident Severity</h1>
+          <p class="muted">Local prediction dashboard</p>
+        </div>
+      </div>
+
+      <section class="glass-card live-card" aria-label="Current time and weather">
+        <div class="card-heading">
+          <span>Current</span>
+          <button class="ghost-btn" id="refresh-weather" type="button">Refresh</button>
+        </div>
+        <div class="clock-block">
+          <div id="clock-time" class="clock-time">--:--:--</div>
+          <div id="clock-date" class="clock-date">Loading date…</div>
+        </div>
+        <div class="weather-block">
+          <div class="weather-icon" id="weather-icon">☁️</div>
+          <div>
+            <div id="weather-temp" class="weather-temp">Weather loading</div>
+            <div id="weather-desc" class="muted">Browser location if allowed; otherwise Tokyo.</div>
+          </div>
+        </div>
+        <div class="mini-grid">
+          <div>
+            <span class="mini-label">Wind</span>
+            <strong id="weather-wind">--</strong>
+          </div>
+          <div>
+            <span class="mini-label">Location</span>
+            <strong id="weather-location">Tokyo</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass-card quick-facts" aria-label="Dataset summary">
+        <div class="fact"><span>Records</span><strong>209,275</strong></div>
+        <div class="fact"><span>Columns</span><strong>17</strong></div>
+        <div class="fact"><span>Outcome</span><strong>Severity</strong></div>
+        <div class="fact"><span>Task</span><strong>Classification</strong></div>
+      </section>
+
+      <nav class="side-nav" aria-label="Page navigation">
+        <a href="#predictor">Prediction</a>
+        <a href="#eda">EDA Summary</a>
+        <a href="#limitations">Notes</a>
+      </nav>
+    </aside>
+
+    <main class="workspace">
+      <section id="predictor" class="section-panel predictor-panel top-predictor">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Prediction</p>
+            <h2>Accident severity prediction</h2>
+          </div>
+          <div class="sample-actions">
+            <button class="ghost-btn" data-sample="low" type="button">Low-risk example</button>
+            <button class="ghost-btn" data-sample="high" type="button">High-risk example</button>
+          </div>
+        </div>
+
+        <div class="predictor-grid">
+          <form id="predict-form" class="predict-form" autocomplete="off">
+            <div class="form-section-title">Crash context</div>
+            <div id="categorical-fields" class="form-grid"></div>
+            <div class="form-section-title">Crash time and involved units</div>
+            <div id="numeric-fields" class="form-grid compact"></div>
+            <button class="primary-btn" type="submit">Predict severity</button>
+          </form>
+
+          <aside class="result-card" aria-live="polite">
+            <div class="result-topline">
+              <span>Predicted severity</span>
+              <span id="prediction-source" class="badge subtle">Waiting for input</span>
+            </div>
+            <div id="prediction-label" class="prediction-label">—</div>
+            <div id="prediction-confidence" class="prediction-confidence">Choose crash information and run prediction.</div>
+            <div id="probability-bars" class="probability-bars"></div>
+            <div class="interpretation-box">
+              <h3>Prediction note</h3>
+              <p id="prediction-note">This is a model estimate. It should be checked together with the original accident context.</p>
+            </div>
+            <details class="json-details">
+              <summary>Show request JSON</summary>
+              <pre id="request-json">{}</pre>
+            </details>
+          </aside>
+        </div>
+      </section>
+
+      <section id="eda" class="section-panel">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">EDA</p>
+            <h2>EDA summary</h2>
+          </div>
+          <div class="toggle-group" role="tablist" aria-label="EDA chart filters">
+            <button class="toggle active" data-eda-filter="all" type="button">All</button>
+            <button class="toggle" data-eda-filter="distribution" type="button">Distribution</button>
+            <button class="toggle" data-eda-filter="risk" type="button">Risk</button>
+            <button class="toggle" data-eda-filter="multi" type="button">Multivariate</button>
+          </div>
+        </div>
+
+        <div class="insight-strip">
+          <article class="insight-card">
+            <span class="accent">01</span>
+            <h3>Most crashes involve two units</h3>
+            <p>Most records involve two units. Crashes with more units are less common.</p>
+          </article>
+          <article class="insight-card">
+            <span class="accent">02</span>
+            <h3>Injury outcomes are imbalanced</h3>
+            <p>No-injury cases are the largest group, so accuracy should be read with balanced metrics.</p>
+          </article>
+          <article class="insight-card">
+            <span class="accent">03</span>
+            <h3>Weather and crash context matter</h3>
+            <p>Rain, wet surfaces, and higher unit counts are associated with higher injury/tow rates.</p>
+          </article>
+        </div>
+
+        <div class="eda-grid" id="eda-grid">
+          <figure class="viz-card" data-eda-type="distribution">
+            <img src="assets/img/eda_01.png" alt="Histogram of number of vehicles involved" />
+            <figcaption><strong>Vehicles involved</strong><span>Two-unit crashes dominate the dataset.</span></figcaption>
+          </figure>
+          <figure class="viz-card" data-eda-type="distribution">
+            <img src="assets/img/eda_03.png" alt="Crash type distribution" />
+            <figcaption><strong>Crash type balance</strong><span>No-injury / drive-away cases are the majority.</span></figcaption>
+          </figure>
+          <figure class="viz-card" data-eda-type="risk">
+            <img src="assets/img/eda_04.png" alt="Weather condition distribution" />
+            <figcaption><strong>Weather exposure</strong><span>Clear weather appears most often because it is the most common condition.</span></figcaption>
+          </figure>
+          <figure class="viz-card" data-eda-type="risk">
+            <img src="assets/img/eda_08.png" alt="Injury/tow crash rate by weather" />
+            <figcaption><strong>Weather risk rate</strong><span>Rain shows a higher injury/tow share than clear conditions.</span></figcaption>
+          </figure>
+          <figure class="viz-card" data-eda-type="multi">
+            <img src="assets/img/eda_11.png" alt="Injury/tow rate by unit count and weather" />
+            <figcaption><strong>Combined patterns</strong><span>Unit count and weather should be reviewed together.</span></figcaption>
+          </figure>
+          <figure class="viz-card" data-eda-type="multi">
+            <img src="assets/img/eda_12.png" alt="Unit count by injury severity" />
+            <figcaption><strong>Severity mix</strong><span>Fatal and severe groups have different unit-count patterns than no-injury cases.</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="limitations" class="section-panel limitations-panel">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Notes</p>
+            <h2>Model limitations</h2>
+          </div>
+        </div>
+        <div class="limitation-grid">
+          <article><strong>Severe-class recall is weak.</strong><p>Rare severe and fatal injuries are hard to detect. The model should not be used for emergency triage.</p></article>
+          <article><strong>Accuracy can mislead.</strong><p>Because no-injury cases are common, accuracy should be read together with Macro F1 and recall.</p></article>
+          <article><strong>Association is not causation.</strong><p>Feature importance and EDA patterns show associations, not causes.</p></article>
+          <article><strong>Local generalisation risk.</strong><p>A model trained on one city's records may not transfer to other cities without retraining.</p></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
