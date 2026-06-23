@@ -1,0 +1,131 @@
+feature,importance
+first_crash_type_PEDESTRIAN,0.09725121
+first_crash_type_PEDALCYCLIST,0.058001578
+first_crash_type_SIDESWIPE SAME DIRECTION,0.05366441
+first_crash_type_PARKED MOTOR VEHICLE,0.025396284
+prim_contributory_cause_IMPROPER BACKING,0.020936592
+num_units,0.017600577
+first_crash_type_ANGLE,0.01724691
+prim_contributory_cause_PHYSICAL CONDITION OF DRIVER,0.016221857
+first_crash_type_REAR END,0.014856941
+prim_contributory_cause_DISREGARDING TRAFFIC SIGNALS,0.014077888
+first_crash_type_REAR TO FRONT,0.013735278
+prim_contributory_cause_UNDER THE INFLUENCE OF ALCOHOL/DRUGS (USE WHEN ARREST IS EFFECTED),0.013328365
+first_crash_type_FIXED OBJECT,0.0123568
+prim_contributory_cause_EXCEEDING AUTHORIZED SPEED LIMIT,0.011453319
+roadway_surface_cond_MISSING,0.010452338
+prim_contributory_cause_FAILING TO REDUCE SPEED TO AVOID CRASH,0.009602785
+first_crash_type_HEAD ON,0.009549804
+first_crash_type_TURNING,0.009307965
+prim_contributory_cause_IMPROPER LANE USAGE,0.0090431785
+"prim_contributory_cause_OPERATING VEHICLE IN ERRATIC, RECKLESS, CARELESS, NEGLIGENT OR AGGRESSIVE MANNER",0.008438179
+prim_contributory_cause_IMPROPER TURNING/NO SIGNAL,0.008244506
+trafficway_type_ONE-WAY,0.008243152
+prim_contributory_cause_FOLLOWING TOO CLOSELY,0.008102235
+weather_condition_MISSING,0.007877212
+prim_contributory_cause_FAILING TO YIELD RIGHT-OF-WAY,0.007841627
+first_crash_type_SIDESWIPE OPPOSITE DIRECTION,0.007658628
+prim_contributory_cause_DISREGARDING STOP SIGN,0.007366866
+prim_contributory_cause_IMPROPER OVERTAKING/PASSING,0.006907525
+trafficway_type_ALLEY,0.0068738787
+trafficway_type_DIVIDED - W/MEDIAN BARRIER,0.0068351985
+lighting_condition_MISSING,0.006651868
+trafficway_type_T-INTERSECTION,0.0066306177
+trafficway_type_TRAFFIC ROUTE,0.0065202946
+prim_contributory_cause_WEATHER,0.00649402
+first_crash_type_OTHER OBJECT,0.0063705076
+trafficway_type_FOUR WAY,0.0062487433
+traffic_control_device_TRAFFIC SIGNAL,0.0062357695
+prim_contributory_cause_DISREGARDING OTHER TRAFFIC SIGNS,0.0062306016
+road_defect_WORN SURFACE,0.006103996
+alignment_STRAIGHT AND LEVEL,0.006098606
+traffic_control_device_NO CONTROLS,0.0060598557
+lighting_condition_DUSK,0.0060381144
+weather_condition_CLOUDY/OVERCAST,0.0060153254
+prim_contributory_cause_UNABLE TO DETERMINE,0.0059426017
+hour_cos,0.0059400136
+weather_condition_OTHER,0.005937901
+prim_contributory_cause_DRIVING ON WRONG SIDE/WRONG WAY,0.0059041507
+weather_condition_SNOW,0.005863179
+prim_contributory_cause_DRIVING SKILLS/KNOWLEDGE/EXPERIENCE,0.00585539
+road_defect_MISSING,0.005802258
+lighting_condition_DARKNESS,0.005759669
+lighting_condition_DAWN,0.005750691
+intersection_related_i_Y,0.0057378775
+traffic_control_device_STOP SIGN/FLASHER,0.005733539
+prim_contributory_cause_ROAD CONSTRUCTION/MAINTENANCE,0.005729731
+intersection_related_i_N,0.0056997836
+trafficway_type_L-INTERSECTION,0.005684505
+weather_condition_CLEAR,0.0056776926
+roadway_surface_cond_DRY,0.005656565
+roadway_surface_cond_WET,0.005634256
+weather_condition_RAIN,0.0055829547
+trafficway_type_OTHER,0.0055433484
+road_defect_NO DEFECTS,0.0055425027
+trafficway_type_DIVIDED - W/MEDIAN (NOT RAISED),0.0055411523
+trafficway_type_UNKNOWN INTERSECTION TYPE,0.005422955
+trafficway_type_NOT DIVIDED,0.005356643
+alignment_STRAIGHT ON GRADE,0.005314511
+roadway_surface_cond_SNOW OR SLUSH,0.0052996995
+hour_sin,0.005296676
+alignment_STRAIGHT ON HILLCREST,0.0052799047
+"lighting_condition_DARKNESS, LIGHTED ROAD",0.0052723726
+is_weekend,0.0052244766
+day_of_week_sin,0.005222657
+prim_contributory_cause_MISSING,0.0052154325
+traffic_control_device_MISSING,0.00519425
+crash_hour,0.005170214
+prim_contributory_cause_HAD BEEN DRINKING (USE WHEN ARREST IS NOT MADE),0.0051616924
+month_cos,0.005159425
+weather_condition_FOG/SMOKE/HAZE,0.00515735
+roadway_surface_cond_OTHER,0.0051374747
+crash_month,0.0051340777
+road_defect_OTHER,0.0051228283
+prim_contributory_cause_DISTRACTION - FROM INSIDE VEHICLE,0.0050985967
+month_sin,0.005097939
+prim_contributory_cause_EQUIPMENT - VEHICLE CONDITION,0.005076257
+"prim_contributory_cause_VISION OBSCURED (SIGNS, TREE LIMBS, BUILDINGS, ETC.)",0.0050518564
+lighting_condition_DAYLIGHT,0.005021187
+crash_day_of_week,0.005013002
+day_of_week_cos,0.004958334
+trafficway_type_CENTER TURN LANE,0.004830314
+traffic_control_device_OTHER_RARE,0.0047439234
+trafficway_type_Y-INTERSECTION,0.00473383
+roadway_surface_cond_ICE,0.0046875617
+"trafficway_type_FIVE POINT, OR MORE",0.0046226145
+"road_defect_RUT, HOLES",0.0046217632
+trafficway_type_MISSING,0.0046130596
+prim_contributory_cause_EXCEEDING SAFE SPEED FOR CONDITIONS,0.004566086
+first_crash_type_REAR TO SIDE,0.0045136027
+first_crash_type_OTHER NONCOLLISION,0.0043362393
+weather_condition_OTHER_RARE,0.0043281815
+trafficway_type_NOT REPORTED,0.004237335
+prim_contributory_cause_TURNING RIGHT ON RED,0.0042148493
+"alignment_CURVE, LEVEL",0.004161413
+prim_contributory_cause_DISTRACTION - FROM OUTSIDE VEHICLE,0.0041581662
+road_defect_SHOULDER DEFECT,0.0040648216
+prim_contributory_cause_DISREGARDING ROAD MARKINGS,0.003986637
+traffic_control_device_OTHER,0.0039838604
+traffic_control_device_LANE USE MARKING,0.0039382903
+prim_contributory_cause_OTHER_RARE,0.003897885
+"prim_contributory_cause_EVASIVE ACTION DUE TO ANIMAL, OBJECT, NONMOTORIST",0.0038929728
+trafficway_type_ROUNDABOUT,0.0038243546
+trafficway_type_PARKING LOT,0.0038039347
+traffic_control_device_YIELD,0.0037917644
+traffic_control_device_PEDESTRIAN CROSSING SIGN,0.0037709735
+first_crash_type_OTHER_RARE,0.0036985248
+weather_condition_SLEET/HAIL,0.0035922178
+weather_condition_FREEZING RAIN/DRIZZLE,0.0034343908
+traffic_control_device_OTHER REG. SIGN,0.0034157573
+prim_contributory_cause_CELL PHONE USE OTHER THAN TEXTING,0.0034069712
+trafficway_type_RAMP,0.0033112678
+trafficway_type_DRIVEWAY,0.0031638483
+traffic_control_device_FLASHING CONTROL SIGNAL,0.0031634537
+alignment_CURVE ON GRADE,0.0030298175
+prim_contributory_cause_ROAD ENGINEERING/SURFACE/MARKING DEFECTS,0.003010016
+prim_contributory_cause_DISREGARDING YIELD SIGN,0.0029546989
+alignment_OTHER_RARE,0.0024869647
+weather_condition_BLOWING SNOW,0.0024668311
+road_defect_DEBRIS ON ROADWAY,0.002389801
+num_units_was_missing,0.0
+roadway_surface_cond_OTHER_RARE,0.0
