@@ -4,7 +4,7 @@
 
 This report presents the modelling and evaluation work for predicting traffic accident injury severity. Building on the cleaned and model-ready datasets from M2/M3 and the exploratory findings from M4, the M5 work focuses on training multiple classification models, comparing their performance with imbalance-aware metrics, and translating the results into stakeholder-facing visualisations.
 
-The modelling target is `most_severe_injury`, simplified into three operational classes:
+The modelling target is `most_severe_injury`. An early version of the modelling task kept the original five injury labels, but the labels were too imbalanced for reliable multi-class learning. In particular, the fatal-injury class was extremely small and produced unstable class-level metrics. For the final M5 pipeline, the target was therefore simplified into three operational classes:
 
 | Original injury categories | M5 modelling class |
 |---|---|
@@ -12,7 +12,7 @@ The modelling target is `most_severe_injury`, simplified into three operational 
 | `REPORTED, NOT EVIDENT`; `NONINCAPACITATING INJURY` | `MINOR_INJURY` |
 | `INCAPACITATING INJURY`; `FATAL` | `SEVERE_INJURY` |
 
-This three-class structure keeps the task interpretable for decision makers while avoiding an extremely sparse five-class fatal-injury category. The final goal is not to replace crash investigation, but to estimate which recorded accident conditions are associated with higher injury severity risk.
+This three-class structure keeps the task interpretable for decision makers while avoiding an extremely sparse five-class fatal-injury category. It also matches a practical operational interpretation: no apparent injury, non-severe injury, and severe or fatal injury. The final goal is not to replace crash investigation, but to estimate which recorded accident conditions are associated with higher injury severity risk.
 
 The M5 deliverables are implemented in four notebooks:
 
@@ -36,6 +36,16 @@ The data was split using a stratified random train/test split so that the injury
 | Training | 167,420 | 80% |
 | Test | 41,855 | 20% |
 
+The final three-class target was still highly imbalanced after aggregation.
+
+| Class | Train rows | Test rows | Test share |
+|---|---:|---:|---:|
+| `NO_INJURY` | 123,814 | 30,953 | 74.0% |
+| `MINOR_INJURY` | 38,075 | 9,519 | 22.7% |
+| `SEVERE_INJURY` | 5,531 | 1,383 | 3.3% |
+
+This distribution explains why the project did not rely on accuracy alone. A model can achieve a high accuracy by mostly predicting `NO_INJURY`, while still missing many severe-injury cases.
+
 The model uses accident-context predictors such as traffic control device, weather condition, lighting condition, first crash type, trafficway type, roadway surface condition, intersection status, primary contributory cause, number of units, crash hour, crash month, and weekend/time-cycle features.
 
 Several columns were deliberately excluded to reduce target leakage:
@@ -45,7 +55,7 @@ Several columns were deliberately excluded to reduce target leakage:
 | `crash_type`, `damage` | These describe downstream crash outcomes too directly. |
 | `injuries_total`, `injuries_fatal`, `injuries_incapacitating`, `injuries_non_incapacitating`, `injuries_reported_not_evident`, `injuries_no_indication` | These are direct or near-direct components of the injury severity target. |
 
-Categorical predictors were represented in two ways. CatBoost used categorical columns directly, while XGBoost used one-hot encoded features. The FT-Transformer-style model used categorical embeddings and scaled numeric inputs.
+Categorical predictors were represented in two ways. CatBoost used categorical columns directly, while XGBoost used one-hot encoded features. The FT-Transformer-style model used categorical embeddings and scaled numeric inputs. Rare categorical levels below the training-frequency threshold were grouped into `OTHER_RARE` so that very small categories did not create unstable one-hot columns or embedding entries.
 
 ---
 
@@ -59,7 +69,20 @@ Three models were trained and compared.
 | XGBoost | XGBoost is a widely used gradient boosting method for structured data. It provides a strong performance baseline on one-hot encoded features and trains faster than CatBoost in this project. |
 | FT-Transformer-style attention model | The FT-Transformer-style neural model represents categorical variables as embeddings and learns feature interactions through attention layers. It was included to test whether a neural tabular model could improve macro-level injury severity performance. |
 
-Because the target classes are imbalanced, all models were evaluated with metrics that do not only reward the majority class. The training process searched class-weight settings with `weight_alpha` values of 0.5, 0.75, and 1.0. The FT-Transformer also used focal loss with `gamma = 2.0` to place more learning emphasis on difficult examples.
+Because the target classes are imbalanced, all models were evaluated with metrics that do not only reward the majority class. The training process searched class-weight settings with `weight_alpha` values of 0.5, 0.75, and 1.0. Fully balanced training weights from the training split were approximately 0.451 for `NO_INJURY`, 1.466 for `MINOR_INJURY`, and 10.090 for `SEVERE_INJURY`; raising these weights to different `weight_alpha` values allowed the pipeline to test weaker or stronger minority-class emphasis. The best validation setting for all three model families was `weight_alpha = 0.75`, while `weight_alpha = 1.0` reduced validation macro F1, indicating that fully balanced weights over-corrected the class imbalance in this dataset.
+
+The implemented imbalance-handling steps were:
+
+| Step | Purpose | Final use |
+|---|---|---|
+| Reduce five injury labels to three operational classes | Keep severe/fatal cases visible while avoiding an almost empty fatal-only class | Used in final pipeline |
+| Stratified train/test split | Preserve the same target distribution in training and test sets | Used in final pipeline |
+| Rare category grouping | Reduce instability from very small categorical levels | Used in final pipeline |
+| Class-weight search with `weight_alpha` values 0.5, 0.75, and 1.0 | Compare different strengths of minority-class emphasis | `0.75` selected |
+| Focal loss for FT-Transformer with `gamma = 2.0` | Put more learning weight on difficult examples | Used for FT-Transformer |
+| Probability multiplier calibration grid | Test whether post-training decision thresholds improved validation macro F1 | Tested, but final multipliers remained 1.0 |
+
+Random oversampling and synthetic sampling were not used in the final pipeline because the records contain many categorical crash-context variables. Synthetic categorical combinations can be hard to justify operationally and may create unrealistic accident profiles. The final approach therefore used target aggregation, weighting, focal loss, stratification, and threshold/calibration checks instead of generating artificial crash records.
 
 ---
 
@@ -184,16 +207,3 @@ Finally, the test split is random and stratified. A stronger deployment evaluati
 M5 trained and evaluated three models for three-class traffic accident injury severity prediction. FT-Transformer achieved the best macro F1 and balanced accuracy, while CatBoost provided a close and interpretable tree-based alternative. The results show that the models can predict common no-injury cases reasonably well, but minority injury classes remain difficult.
 
 The main modelling conclusion is that traffic accident severity prediction is feasible at a broad level but not yet reliable enough for high-stakes severe-injury detection. The strongest next steps are threshold tuning for severe-injury recall, additional feature engineering, temporal validation, and more targeted handling of rare severe outcomes.
-
----
-
-## 11. M5 Requirement Checklist
-
-| Requirement | Status | Evidence |
-|---|---|---|
-| At least two models trained and evaluated | Complete | CatBoost, XGBoost, and FT-Transformer were trained and evaluated. |
-| Justified rationale for each model choice | Complete | Section 3 explains each model choice. |
-| At least two appropriate evaluation metrics | Complete | Accuracy, balanced accuracy, macro precision, macro recall, macro F1, and weighted F1 are reported. |
-| Comparison table or chart | Complete | Section 5 includes both a comparison table and Figure 1. |
-| At least three stakeholder-facing visualisations | Complete | Figures 1-4 provide four stakeholder-facing visuals. |
-| Brief model limitations and failure modes | Complete | Section 9 documents limitations and failure modes. |

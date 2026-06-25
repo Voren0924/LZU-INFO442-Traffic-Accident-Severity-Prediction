@@ -1,7 +1,9 @@
 # Final Report
 
-Place the final written report here.
+The full written report is:
 
-Suggested filenames:
+- `final_written_report.md`
+
+Suggested export filenames:
 - `final_report.docx`
 - `final_report.pdf`
