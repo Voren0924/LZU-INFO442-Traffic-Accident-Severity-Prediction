@@ -4,8 +4,8 @@ This folder contains the final delivery materials for the traffic accident sever
 
 ## Folder guide
 
-- `deployment/web_app/` — local web application for the working demo.
-- `report/` — final written report, 10–15 pages.
+- `deployment/` — local web application for the working demo and the M6 report
+- `final_written_report/` — final written report, 10–15 pages.
 - `presentation/` — 7-minute class presentation slides.
 - `model_card/` — one-page model card.
 - `demo_video/` — demo video file or video link.

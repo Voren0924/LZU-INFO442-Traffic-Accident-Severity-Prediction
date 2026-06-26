@@ -280,7 +280,7 @@ The web application was designed with two goals:
 This dual purpose explains the structure of the interface. The left sidebar displays live current time, date, weather, wind, and location. The main area contains the prediction form and result display. The lower dashboard includes EDA charts, model metrics, and limitation notes.
 
 <p align="center">
-  <img src="../web-main.png" alt="Main web app prediction interface" width="760">
+  <img src="web-main.png" alt="Main web app prediction interface" width="760">
 </p>
 
 Figure 9 shows the main prediction screen. The left panel displays current time and weather, the center panel collects crash-context inputs, and the right panel is reserved for predicted severity, confidence, probability bars, and prediction notes. This screenshot illustrates the intended balance between a realistic prediction-system interface and a clear classroom demonstration layout.
@@ -301,7 +301,7 @@ This design makes the page more realistic. If the system were used as a live sup
 If browser geolocation is unavailable, the page falls back to a default weather location. If weather access fails completely, the user can still manually choose a weather category. The front end also tracks user edits so that automatic defaults do not overwrite fields the user has already changed.
 
 <p align="center">
-  <img src="../web-EDA.png" alt="Web app EDA summary dashboard" width="760">
+  <img src="web-EDA.png" alt="Web app EDA summary dashboard" width="760">
 </p>
 
 Figure 10 shows the EDA summary section inside the deployed web page. This section carries the project findings into the interface by showing concise insight cards, filter buttons, and chart cards for distribution, risk, and multivariate patterns.
