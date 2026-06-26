@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Model Card | Traffic Accident Severity Prediction</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f697a;
+      --line: #d9dee7;
+      --paper: #fbfcff;
+      --blue: #2f5f9f;
+      --teal: #17786f;
+      --green: #2d7d46;
+      --amber: #b36a00;
+      --red: #b94343;
+      --panel: #ffffff;
+      --soft-blue: #e9f0fb;
+      --soft-teal: #e6f5f2;
+      --soft-amber: #fff2df;
+      --soft-red: #fae8e6;
+      --shadow: 0 18px 45px rgba(23, 32, 51, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #dfe5ef;
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    .print-action {
+      position: fixed;
+      right: 24px;
+      top: 22px;
+      z-index: 2;
+      border: 1px solid #24456f;
+      background: #24456f;
+      color: white;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(36, 69, 111, 0.22);
+    }
+
+    .sheet {
+      width: 297mm;
+      min-height: 210mm;
+      background: var(--paper);
+      padding: 7mm;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+      border-bottom: 3px solid var(--ink);
+      padding-bottom: 7px;
+      margin-bottom: 7px;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1.05;
+      max-width: 760px;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.32;
+      max-width: 720px;
+    }
+
+    .identity-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+    }
+
+    .identity {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 8px;
+      padding: 6px 7px;
+    }
+
+    .identity span {
+      display: block;
+      color: var(--muted);
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .identity strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 10.5px;
+      line-height: 1.1;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-bottom: 7px;
+    }
+
+    .metric {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px;
+      min-height: 48px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 8.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 8px;
+      line-height: 1.15;
+    }
+
+    .metric.primary {
+      border-color: #b8c9e5;
+      background: var(--soft-blue);
+    }
+
+    .metric.warning {
+      border-color: #e0b8b2;
+      background: var(--soft-red);
+    }
+
+    .metric.warning strong {
+      color: var(--red);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.05fr 1.1fr 0.95fr;
+      gap: 8px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      break-inside: avoid;
+    }
+
+    .panel h2 {
+      font-size: 12.5px;
+      margin-bottom: 5px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel p,
+    .panel li {
+      color: #333d4e;
+      font-size: 9.2px;
+      line-height: 1.28;
+    }
+
+    ul {
+      padding-left: 15px;
+      margin: 6px 0 0;
+    }
+
+    li + li {
+      margin-top: 2.5px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 5px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 3px 6px;
+      background: var(--soft-blue);
+      color: #24456f;
+      font-size: 8.3px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .flow div {
+      border-radius: 8px;
+      padding: 6px;
+      min-height: 42px;
+      background: #f4f6fa;
+      border: 1px solid var(--line);
+      font-size: 8.6px;
+      line-height: 1.28;
+    }
+
+    .flow strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 9.3px;
+    }
+
+    .class-map {
+      display: grid;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .class-map div {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 6px;
+      align-items: start;
+      border-left: 4px solid var(--teal);
+      background: var(--soft-teal);
+      padding: 5px 6px;
+      border-radius: 6px;
+      font-size: 8.8px;
+      line-height: 1.25;
+    }
+
+    .class-map strong {
+      font-size: 8.8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.8px;
+    }
+
+    th {
+      color: var(--muted);
+      text-align: left;
+      font-size: 8px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+      padding: 4px 3px;
+    }
+
+    td {
+      border-bottom: 1px solid #edf0f5;
+      padding: 4px 3px;
+      vertical-align: middle;
+    }
+
+    .model-table td:first-child {
+      font-weight: 800;
+    }
+
+    .selected-row {
+      background: #edf5ff;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 78px 1fr 42px;
+      gap: 7px;
+      align-items: center;
+      margin-top: 5px;
+      font-size: 8.8px;
+    }
+
+    .bar-track {
+      height: 8px;
+      background: #e8edf5;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--blue);
+    }
+
+    .bar-fill.minor {
+      background: var(--amber);
+    }
+
+    .bar-fill.severe {
+      background: var(--red);
+    }
+
+    .callout {
+      margin-top: 6px;
+      border-radius: 8px;
+      padding: 6px;
+      background: var(--soft-amber);
+      border: 1px solid #ebc98b;
+      color: #583800;
+      font-size: 8.8px;
+      line-height: 1.28;
+    }
+
+    .callout.danger {
+      background: var(--soft-red);
+      border-color: #e4bbb6;
+      color: #5e2323;
+    }
+
+    .do-dont {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .do-dont div {
+      border-radius: 8px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      min-height: 72px;
+    }
+
+    .do {
+      background: #eef8f0;
+    }
+
+    .dont {
+      background: var(--soft-red);
+    }
+
+    .do-dont h3 {
+      font-size: 10px;
+      margin-bottom: 3px;
+    }
+
+    .mini-note {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 8.5px;
+      line-height: 1.25;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 7px;
+      padding-top: 6px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 8.3px;
+    }
+
+    .risk-pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: #172033;
+      color: white;
+      font-weight: 800;
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: white;
+        display: block;
+      }
+
+      .print-action {
+        display: none;
+      }
+
+      .sheet {
+        width: 297mm;
+        min-height: 210mm;
+        box-shadow: none;
+        padding: 7mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="print-action" type="button" onclick="window.print()">Print / Save PDF</button>
+
+  <main class="sheet" aria-label="One-page model card">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Model Card</p>
+        <h1>Traffic Accident Injury Severity Prediction</h1>
+        <p class="subtitle">
+          A prototype tabular classification model that estimates the likely injury severity class
+          from recorded crash context. The model is intended for educational demonstration and
+          exploratory safety analysis, not for emergency triage or automated operational decisions.
+        </p>
+      </div>
+      <div class="identity-grid" aria-label="Model identity">
+        <div class="identity"><span>Selected model</span><strong>FT-Transformer raw</strong></div>
+        <div class="identity"><span>Target</span><strong>most_severe_injury</strong></div>
+        <div class="identity"><span>Task</span><strong>3-class classification</strong></div>
+        <div class="identity"><span>Selection metric</span><strong>Validation macro F1</strong></div>
+      </div>
+    </header>
+
+    <section class="hero-metrics" aria-label="Key evaluation metrics">
+      <article class="metric primary"><span>Test accuracy</span><strong>0.7250</strong><small>Overall correctness</small></article>
+      <article class="metric primary"><span>Macro F1</span><strong>0.4807</strong><small>Main test metric</small></article>
+      <article class="metric"><span>Balanced acc.</span><strong>0.4844</strong><small>Mean class recall</small></article>
+      <article class="metric"><span>Weighted F1</span><strong>0.7196</strong><small>Class-frequency weighted</small></article>
+      <article class="metric"><span>Training rows</span><strong>167,420</strong><small>80% stratified split</small></article>
+      <article class="metric warning"><span>Severe recall</span><strong>0.2321</strong><small>Major limitation</small></article>
+    </section>
+
+    <section class="layout">
+      <div>
+        <article class="panel">
+          <h2>Intended Use</h2>
+          <p>
+            The model supports classroom demonstration, exploratory crash-risk review, and scenario
+            comparison in the local web app. It can help users see how crash context such as first
+            crash type, roadway context, weather, lighting, and contributing cause relates to predicted
+            injury severity.
+          </p>
+          <div class="do-dont">
+            <div class="do">
+              <h3>Appropriate</h3>
+              <p>Education, prototype demos, retrospective analysis, model comparison, and discussion of public-safety data risks.</p>
+            </div>
+            <div class="dont">
+              <h3>Not Appropriate</h3>
+              <p>Emergency dispatch, real-time triage, legal decisions, insurance decisions, or replacing professional judgement.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top: 10px;">
+          <h2>Data and Inputs</h2>
+          <p>
+            The project uses 209,275 cleaned traffic accident records after removing 31 exact duplicates
+            from 209,306 raw rows. The final split is stratified: 167,420 training rows and 41,855 test rows.
+          </p>
+          <div class="tag-row" aria-label="Feature groups">
+            <span class="tag">Traffic control</span>
+            <span class="tag">Weather</span>
+            <span class="tag">Lighting</span>
+            <span class="tag">First crash type</span>
+            <span class="tag">Trafficway</span>
+            <span class="tag">Road surface</span>
+            <span class="tag">Road defect</span>
+            <span class="tag">Intersection</span>
+            <span class="tag">Contributing cause</span>
+            <span class="tag">Units and time</span>
+          </div>
+          <p class="mini-note">
+            Leakage-prone columns were excluded, including crash_type, damage, injuries_total,
+            injuries_fatal, injuries_incapacitating, injuries_non_incapacitating,
+            injuries_reported_not_evident, and injuries_no_indication.
+          </p>
+        </article>
+      </div>
+
+      <div>
+        <article class="panel">
+          <h2>Target Design</h2>
+          <p>
+            The original five injury labels were compressed into three operational classes to reduce
+            instability from the extremely rare fatal-only class while preserving a severe/fatal signal.
+          </p>
+          <div class="class-map">
+            <div><strong>NO_INJURY</strong><span>No indication of injury</span></div>
+            <div><strong>MINOR_INJURY</strong><span>Reported/not evident or non-incapacitating injury</span></div>
+            <div><strong>SEVERE_INJURY</strong><span>Incapacitating or fatal injury</span></div>
+          </div>
+          <div class="flow" aria-label="Imbalance handling">
+            <div><strong>Imbalance</strong>Test share: 74.0% no injury, 22.7% minor, 3.3% severe.</div>
+            <div><strong>Training</strong>Class-weight search with best weight_alpha = 0.75.</div>
+            <div><strong>FT model</strong>Categorical embeddings, scaled numeric inputs, focal loss gamma = 2.0.</div>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top: 10px;">
+          <h2>Performance Summary</h2>
+          <table class="model-table" aria-label="Model comparison">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>Bal. Acc.</th>
+                <th>Macro F1</th>
+                <th>Train sec.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="selected-row">
+                <td>FT-Transformer</td>
+                <td>0.7250</td>
+                <td>0.4844</td>
+                <td>0.4807</td>
+                <td>260.64</td>
+              </tr>
+              <tr>
+                <td>CatBoost</td>
+                <td>0.7215</td>
+                <td>0.4802</td>
+                <td>0.4786</td>
+                <td>529.14</td>
+              </tr>
+              <tr>
+                <td>XGBoost</td>
+                <td>0.7176</td>
+                <td>0.4648</td>
+                <td>0.4643</td>
+                <td>165.49</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="bar-row"><strong>NO_INJURY</strong><div class="bar-track"><div class="bar-fill" style="width: 85.86%;"></div></div><span>R 0.8586</span></div>
+          <div class="bar-row"><strong>MINOR</strong><div class="bar-track"><div class="bar-fill minor" style="width: 36.24%;"></div></div><span>R 0.3624</span></div>
+          <div class="bar-row"><strong>SEVERE</strong><div class="bar-track"><div class="bar-fill severe" style="width: 23.21%;"></div></div><span>R 0.2321</span></div>
+
+          <p class="callout">
+            Interpretation: the selected model is strongest on common no-injury cases. It remains weak
+            on severe injuries, so overall accuracy should not be treated as evidence of deployment readiness.
+          </p>
+        </article>
+      </div>
+
+      <div>
+        <article class="panel">
+          <h2>Limitations</h2>
+          <ul>
+            <li>Severe injuries are rare, so severe-class precision, recall, and F1 are low.</li>
+            <li>The data contains reported crashes only; reporting patterns may differ from real accident occurrence.</li>
+            <li>Inputs include broad categories such as OTHER, MISSING, and UNABLE TO DETERMINE.</li>
+            <li>The model estimates associations from observational records and does not establish causality.</li>
+            <li>The evaluation uses a random stratified split; temporal and geographic validation are still needed.</li>
+            <li>The local web app lacks production controls such as authentication, monitoring, audit logs, and drift checks.</li>
+          </ul>
+          <p class="callout danger">
+            Primary risk: many actual severe-injury crashes are predicted as no injury or minor injury.
+            Any use that prioritizes emergency response would require stronger recall-focused tuning,
+            external validation, and human oversight.
+          </p>
+        </article>
+
+        <article class="panel" style="margin-top: 10px;">
+          <h2>Recommended Use Conditions</h2>
+          <ul>
+            <li>Display class probabilities, not only the top predicted label.</li>
+            <li>Report macro F1, balanced accuracy, and severe recall alongside accuracy.</li>
+            <li>Use the model as decision support for exploration, never as a decision maker.</li>
+            <li>Before real deployment, validate across time, location, subgroups, and reporting changes.</li>
+          </ul>
+          <p class="mini-note">
+            Suggested next step: tune severe-injury decision thresholds and evaluate the tradeoff between
+            severe recall and false alarms with a cost-sensitive metric.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>
+        Project: LZU INFO442 Traffic Accident Severity Prediction. Source artifacts: M5 model outputs,
+        preprocessing metadata, final written report, and M6 local web deployment.
+      </span>
+      <span class="risk-pill">Prototype only</span>
+    </footer>
+  </main>
+</body>
+</html>

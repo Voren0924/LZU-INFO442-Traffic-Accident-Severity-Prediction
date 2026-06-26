@@ -1,0 +1,1389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Model Card | Traffic Accident Severity Prediction</title>
+  <style>
+    :root {
+      --bg: #eef2f7;
+      --surface: #ffffff;
+      --surface-2: #f6f8fb;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e0ea;
+      --blue: #255e9c;
+      --cyan: #158287;
+      --green: #2f7d4a;
+      --amber: #b56b00;
+      --red: #b94242;
+      --purple: #6b5ca5;
+      --shadow: 0 18px 55px rgba(31, 43, 66, 0.16);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(37, 94, 156, 0.10), rgba(21, 130, 135, 0.08)),
+        var(--bg);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    .app {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      min-height: calc(100vh - 48px);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(217, 224, 234, 0.88);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    aside {
+      background: #172033;
+      color: white;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #f0c75e;
+      color: #172033;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: #74d3cf;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 19px;
+      line-height: 1.1;
+    }
+
+    .aside-note {
+      color: #bdc7d7;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+      text-align: left;
+      cursor: pointer;
+      transition: 160ms ease;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #ffffff;
+      color: #172033;
+      border-color: white;
+    }
+
+    .nav span:first-child {
+      font-weight: 800;
+    }
+
+    .nav small {
+      color: inherit;
+      opacity: 0.68;
+      font-size: 11px;
+    }
+
+    .sidebar-card {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .sidebar-card h2 {
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .mini-stat {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      padding: 10px;
+    }
+
+    .mini-stat span {
+      display: block;
+      color: #bdc7d7;
+      font-size: 11px;
+    }
+
+    .mini-stat strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 17px;
+    }
+
+    .print-button {
+      margin-top: auto;
+      border: 0;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: #f0c75e;
+      color: #172033;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    main {
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) 360px;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .hero-panel,
+    .control-panel,
+    .content-panel,
+    .metric-card,
+    .risk-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .hero-panel {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--amber), var(--red));
+    }
+
+    .hero h2 {
+      max-width: 760px;
+      font-size: 31px;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #eaf1fb;
+      color: #244f82;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .status-card {
+      padding: 20px;
+      background: #172033;
+      color: white;
+      border-radius: var(--radius);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-card span {
+      color: #bdc7d7;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .status-card strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 27px;
+      line-height: 1.05;
+    }
+
+    .status-card p {
+      color: #dbe3ef;
+      font-size: 13px;
+      line-height: 1.45;
+      margin-top: 14px;
+    }
+
+    .control-panel {
+      padding: 14px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      padding: 10px;
+      color: var(--ink);
+      min-height: 42px;
+    }
+
+    .toggle-row {
+      display: flex;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      padding: 3px;
+      min-height: 42px;
+    }
+
+    .toggle-row button {
+      flex: 1;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .toggle-row button.active {
+      background: white;
+      color: var(--ink);
+      box-shadow: 0 2px 10px rgba(23, 32, 51, 0.12);
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) 380px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .content-panel {
+      padding: 18px;
+      min-height: 500px;
+    }
+
+    .section {
+      display: none;
+      animation: rise 240ms ease both;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      font-size: 22px;
+      margin-top: 2px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 720px;
+      margin-top: 6px;
+    }
+
+    .model-badge {
+      white-space: nowrap;
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: #eaf1fb;
+      color: #244f82;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .metric-card {
+      padding: 14px;
+      min-height: 112px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: var(--blue);
+      transform-origin: left;
+      transform: scaleX(var(--scale, 0.5));
+      transition: transform 420ms ease;
+    }
+
+    .metric-card:nth-child(2)::after {
+      background: var(--cyan);
+    }
+
+    .metric-card:nth-child(3)::after {
+      background: var(--amber);
+    }
+
+    .metric-card:nth-child(4)::after {
+      background: var(--purple);
+    }
+
+    .metric-card span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .metric-card strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .metric-card p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      margin-top: 8px;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+
+    .compare-table th {
+      text-align: left;
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .compare-table td {
+      border-bottom: 1px solid #edf1f6;
+      padding: 11px;
+      vertical-align: middle;
+      overflow-wrap: anywhere;
+    }
+
+    .compare-table tr.selected {
+      background: #ecf4ff;
+    }
+
+    .mini-bar {
+      display: block;
+      width: 100%;
+      height: 8px;
+      background: #e4eaf3;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .mini-bar i {
+      display: block;
+      height: 100%;
+      background: var(--blue);
+      border-radius: 999px;
+      transition: width 300ms ease;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .story-card {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      padding: 14px;
+      min-height: 145px;
+    }
+
+    .story-card h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .story-card p,
+    .story-card li {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .story-card ul {
+      padding-left: 18px;
+      margin: 8px 0 0;
+    }
+
+    .risk-panel {
+      padding: 18px;
+      position: sticky;
+      top: 20px;
+    }
+
+    .risk-title {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .risk-title h2 {
+      font-size: 18px;
+    }
+
+    .risk-level {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #fbe9e6;
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .class-bars {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .class-row {
+      display: grid;
+      grid-template-columns: 92px 1fr 48px;
+      gap: 9px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .track {
+      height: 12px;
+      border-radius: 999px;
+      background: #e5ebf3;
+      overflow: hidden;
+    }
+
+    .fill {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--blue);
+      transition: width 460ms ease;
+    }
+
+    .fill.minor {
+      background: var(--amber);
+    }
+
+    .fill.severe {
+      background: var(--red);
+    }
+
+    .risk-copy {
+      border-radius: var(--radius);
+      background: #fff2df;
+      border: 1px solid #eccd9c;
+      padding: 13px;
+      color: #593900;
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+
+    .threshold-box {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      padding: 13px;
+    }
+
+    .threshold-box strong {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .threshold-box p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin-top: 9px;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 120px repeat(3, 1fr);
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .matrix div {
+      min-height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      text-align: center;
+      font-size: 12px;
+      padding: 7px;
+    }
+
+    .matrix .head {
+      background: #172033;
+      color: white;
+      font-weight: 900;
+    }
+
+    .matrix .good {
+      background: #eaf7ee;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .matrix .bad {
+      background: #fbe9e6;
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline div {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 11px;
+      align-items: start;
+    }
+
+    .timeline span {
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #eaf1fb;
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .timeline strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .timeline p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .hidden-print-note {
+      display: none;
+    }
+
+    @media (max-width: 1050px) {
+      .shell,
+      .hero,
+      .dashboard,
+      .control-panel {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+      }
+
+      .metric-grid,
+      .story-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        padding: 10px;
+      }
+
+      .shell {
+        border-radius: 8px;
+      }
+
+      main,
+      aside {
+        padding: 15px;
+      }
+
+      .hero h2 {
+        font-size: 24px;
+      }
+
+      .metric-grid,
+      .story-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .app {
+        max-width: none;
+        padding: 0;
+      }
+
+      .shell {
+        display: block;
+        box-shadow: none;
+        border: 0;
+      }
+
+      aside,
+      .control-panel,
+      .risk-panel,
+      .print-button {
+        display: none;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      .hero {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .status-card {
+        display: none;
+      }
+
+      .content-panel {
+        border: 0;
+        padding: 0;
+        min-height: auto;
+      }
+
+      .section {
+        display: none !important;
+      }
+
+      .section#print-view {
+        display: block !important;
+      }
+
+      .hidden-print-note {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="shell">
+      <aside aria-label="Interactive model card controls">
+        <div class="brand">
+          <div class="mark">MC</div>
+          <div>
+            <p class="eyebrow">Interactive Model Card</p>
+            <h1>Traffic Accident Severity</h1>
+          </div>
+        </div>
+
+        <p class="aside-note">
+          Use this version for presentation. It lets the audience move between the model story,
+          performance evidence, deployment framing, and limitations without changing files.
+        </p>
+
+        <nav class="nav" aria-label="Model card sections">
+          <button class="active" type="button" data-section="overview">
+            <span>Overview</span><small>what it is</small>
+          </button>
+          <button type="button" data-section="performance">
+            <span>Performance</span><small>model evidence</small>
+          </button>
+          <button type="button" data-section="risk">
+            <span>Risk Review</span><small>failure modes</small>
+          </button>
+          <button type="button" data-section="deployment">
+            <span>Deployment</span><small>how to use</small>
+          </button>
+        </nav>
+
+        <div class="sidebar-card">
+          <h2>Dataset Snapshot</h2>
+          <div class="mini-grid">
+            <div class="mini-stat"><span>Clean rows</span><strong>209,275</strong></div>
+            <div class="mini-stat"><span>Test rows</span><strong>41,855</strong></div>
+            <div class="mini-stat"><span>Classes</span><strong>3</strong></div>
+            <div class="mini-stat"><span>Seed</span><strong>42</strong></div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h2>Headline Warning</h2>
+          <p class="aside-note">
+            The model is useful as a prototype, but severe-injury recall is only 0.2321 on the test set.
+          </p>
+        </div>
+
+        <button class="print-button" type="button" onclick="window.print()">Print summary</button>
+      </aside>
+
+      <main>
+        <section class="hero" aria-label="Interactive model card header">
+          <div class="hero-panel">
+            <p class="eyebrow">Selected model: FT-Transformer raw</p>
+            <h2>Explore the model card as a live stakeholder briefing.</h2>
+            <p>
+              This dynamic card summarizes intended use, evidence, limitations, and deployment conditions
+              for the traffic accident injury severity predictor. It keeps the core one-page facts while
+              adding interaction for classroom presentation.
+            </p>
+            <div class="hero-tags">
+              <span class="tag">Prototype only</span>
+              <span class="tag">Macro F1 selected</span>
+              <span class="tag">Severe recall risk</span>
+              <span class="tag">Local web app ready</span>
+            </div>
+          </div>
+
+          <div class="status-card" aria-live="polite">
+            <div>
+              <span id="status-label">Current view</span>
+              <strong id="status-title">Overview</strong>
+              <p id="status-copy">Model purpose, data setup, and target design for quick briefing.</p>
+            </div>
+            <p>Use the controls below to change the displayed model evidence and presenter mode.</p>
+          </div>
+        </section>
+
+        <section class="control-panel" aria-label="Display controls">
+          <label>
+            Model comparison
+            <select id="model-select">
+              <option value="ft">FT-Transformer</option>
+              <option value="cat">CatBoost</option>
+              <option value="xgb">XGBoost</option>
+            </select>
+          </label>
+
+          <label>
+            Emphasis
+            <select id="metric-focus">
+              <option value="balanced">Balanced view</option>
+              <option value="accuracy">Accuracy story</option>
+              <option value="minority">Minority-class story</option>
+            </select>
+          </label>
+
+          <label>
+            Presentation mode
+            <div class="toggle-row" role="group" aria-label="Presentation mode">
+              <button class="active" type="button" data-mode="brief">Brief</button>
+              <button type="button" data-mode="technical">Technical</button>
+            </div>
+          </label>
+
+          <label>
+            Severe alert threshold <span id="threshold-value">0.30</span>
+            <input id="threshold" type="range" min="0.10" max="0.70" step="0.05" value="0.30" />
+          </label>
+        </section>
+
+        <section class="dashboard">
+          <div class="content-panel">
+            <section id="overview" class="section active">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Overview</p>
+                  <h2>What the model is for</h2>
+                  <p>
+                    A tabular classification model estimates whether a crash record is likely to be
+                    NO_INJURY, MINOR_INJURY, or SEVERE_INJURY using crash context rather than direct injury outcomes.
+                  </p>
+                </div>
+                <span class="model-badge">Prototype decision support</span>
+              </div>
+
+              <div class="metric-grid">
+                <article class="metric-card" style="--scale: .725;">
+                  <span>Test accuracy</span>
+                  <strong data-metric="accuracy">0.7250</strong>
+                  <p>Overall correctness, inflated by the majority no-injury class.</p>
+                </article>
+                <article class="metric-card" style="--scale: .481;">
+                  <span>Macro F1</span>
+                  <strong data-metric="macro">0.4807</strong>
+                  <p>Main test metric because it gives equal weight to each class.</p>
+                </article>
+                <article class="metric-card" style="--scale: .484;">
+                  <span>Balanced accuracy</span>
+                  <strong data-metric="balanced">0.4844</strong>
+                  <p>Average recall across no injury, minor injury, and severe injury.</p>
+                </article>
+                <article class="metric-card" style="--scale: .232;">
+                  <span>Severe recall</span>
+                  <strong data-metric="severe">0.2321</strong>
+                  <p>The central limitation for any high-stakes use.</p>
+                </article>
+              </div>
+
+              <div class="story-grid">
+                <article class="story-card">
+                  <h3>Intended use</h3>
+                  <p>Education, local demo, exploratory analysis, scenario comparison, and stakeholder discussion.</p>
+                </article>
+                <article class="story-card">
+                  <h3>Not intended for</h3>
+                  <p>Emergency triage, dispatch decisions, legal or insurance decisions, or replacing human judgement.</p>
+                </article>
+                <article class="story-card">
+                  <h3>Inputs</h3>
+                  <p>Traffic control, weather, lighting, crash type, trafficway, surface, defects, intersection status, cause, units, and time.</p>
+                </article>
+              </div>
+            </section>
+
+            <section id="performance" class="section">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Performance</p>
+                  <h2>Compare candidate models</h2>
+                  <p id="performance-copy">
+                    FT-Transformer has the strongest macro F1 and balanced accuracy, while CatBoost remains a close interpretable alternative.
+                  </p>
+                </div>
+                <span class="model-badge" id="selected-model-badge">Viewing FT-Transformer</span>
+              </div>
+
+              <table class="compare-table" aria-label="Model comparison table">
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>Accuracy</th>
+                    <th>Balanced accuracy</th>
+                    <th>Macro F1</th>
+                    <th>Weighted F1</th>
+                    <th>Training seconds</th>
+                  </tr>
+                </thead>
+                <tbody id="model-table-body"></tbody>
+              </table>
+            </section>
+
+            <section id="risk" class="section">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Risk Review</p>
+                  <h2>Where the model fails</h2>
+                  <p>
+                    The biggest practical risk is false reassurance: many actual severe-injury cases
+                    are still assigned to lower-severity classes.
+                  </p>
+                </div>
+                <span class="model-badge">Use with caution</span>
+              </div>
+
+              <div class="matrix" aria-label="Risk matrix">
+                <div class="head">Class</div>
+                <div class="head">Precision</div>
+                <div class="head">Recall</div>
+                <div class="head">F1</div>
+                <div>NO_INJURY</div>
+                <div class="good">0.8276</div>
+                <div class="good">0.8586</div>
+                <div class="good">0.8428</div>
+                <div>MINOR_INJURY</div>
+                <div>0.4309</div>
+                <div>0.3624</div>
+                <div>0.3937</div>
+                <div>SEVERE_INJURY</div>
+                <div class="bad">0.1845</div>
+                <div class="bad">0.2321</div>
+                <div class="bad">0.2056</div>
+              </div>
+
+              <div class="story-grid" style="margin-top: 14px;">
+                <article class="story-card">
+                  <h3>Data imbalance</h3>
+                  <p>Severe injuries are only 3.3% of the test set, so the model has limited severe examples.</p>
+                </article>
+                <article class="story-card">
+                  <h3>Reporting bias</h3>
+                  <p>The dataset contains reported crashes and may reflect reporting practices as well as crash patterns.</p>
+                </article>
+                <article class="story-card">
+                  <h3>Generalization</h3>
+                  <p>Random split evaluation should be extended with temporal, geographic, and subgroup validation.</p>
+                </article>
+              </div>
+            </section>
+
+            <section id="deployment" class="section">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Deployment</p>
+                  <h2>How the model should be shown</h2>
+                  <p>
+                    The M6 local web app is a prototype demonstration system. It can present predictions,
+                    probabilities, request JSON, EDA charts, and limitation notes.
+                  </p>
+                </div>
+                <span class="model-badge">Local demo app</span>
+              </div>
+
+              <div class="timeline">
+                <div>
+                  <span>1</span>
+                  <p><strong>Collect crash context</strong>Use model features such as weather, lighting, first crash type, units, road context, and time.</p>
+                </div>
+                <div>
+                  <span>2</span>
+                  <p><strong>Run consistent preprocessing</strong>Normalize categories, handle rare values, impute numeric values, and recreate cyclic time features.</p>
+                </div>
+                <div>
+                  <span>3</span>
+                  <p><strong>Show probabilities</strong>Display class probabilities and confidence rather than only a top label.</p>
+                </div>
+                <div>
+                  <span>4</span>
+                  <p><strong>Keep limitations visible</strong>Macro F1, balanced accuracy, and severe recall must stay visible beside predictions.</p>
+                </div>
+              </div>
+            </section>
+
+            <section id="print-view" class="section">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Printable Summary</p>
+                  <h2>Traffic Accident Injury Severity Prediction</h2>
+                  <p>
+                    Selected model: FT-Transformer raw. Intended for education, local demonstration,
+                    and exploratory analysis only. Test accuracy is 0.7250, macro F1 is 0.4807,
+                    balanced accuracy is 0.4844, and severe-injury recall is 0.2321.
+                  </p>
+                </div>
+                <span class="model-badge">Prototype only</span>
+              </div>
+              <div class="story-grid">
+                <article class="story-card">
+                  <h3>Use</h3>
+                  <p>Classroom demo, stakeholder briefing, and scenario review.</p>
+                </article>
+                <article class="story-card">
+                  <h3>Evidence</h3>
+                  <p>FT-Transformer slightly outperforms CatBoost and XGBoost on macro F1.</p>
+                </article>
+                <article class="story-card">
+                  <h3>Limit</h3>
+                  <p>Severe-injury detection is weak; not suitable for emergency or legal decisions.</p>
+                </article>
+              </div>
+              <p class="hidden-print-note" style="margin-top: 16px; color: #667085; font-size: 12px;">
+                Interactive version includes tabs, model comparison, threshold discussion, and deployment guidance.
+              </p>
+            </section>
+          </div>
+
+          <aside class="risk-panel" aria-label="Dynamic risk panel">
+            <div class="risk-title">
+              <div>
+                <p class="eyebrow">Live Reading</p>
+                <h2 id="risk-heading">Balanced model reading</h2>
+              </div>
+              <span class="risk-level" id="risk-level">Prototype</span>
+            </div>
+
+            <div class="class-bars">
+              <div class="class-row">
+                <span>NO_INJURY</span>
+                <div class="track"><i class="fill" id="bar-no" style="width: 85.86%;"></i></div>
+                <span id="val-no">0.8586</span>
+              </div>
+              <div class="class-row">
+                <span>MINOR</span>
+                <div class="track"><i class="fill minor" id="bar-minor" style="width: 36.24%;"></i></div>
+                <span id="val-minor">0.3624</span>
+              </div>
+              <div class="class-row">
+                <span>SEVERE</span>
+                <div class="track"><i class="fill severe" id="bar-severe" style="width: 23.21%;"></i></div>
+                <span id="val-severe">0.2321</span>
+              </div>
+            </div>
+
+            <p class="risk-copy" id="risk-copy">
+              The model is acceptable for explaining modelling tradeoffs, but not for high-stakes severe-injury detection.
+            </p>
+
+            <div class="threshold-box">
+              <strong>
+                <span>Threshold discussion</span>
+                <span id="threshold-label">0.30</span>
+              </strong>
+              <input id="threshold-side" type="range" min="0.10" max="0.70" step="0.05" value="0.30" />
+              <p id="threshold-copy">
+                A lower severe alert threshold would flag more possible severe cases, but it would also create more false alarms.
+              </p>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const models = {
+      ft: {
+        name: "FT-Transformer",
+        accuracy: 0.7250,
+        balanced: 0.4844,
+        macro: 0.4807,
+        weighted: 0.7196,
+        seconds: 260.64,
+        recall: { no: 0.8586, minor: 0.3624, severe: 0.2321 },
+        note: "Best macro F1 and balanced accuracy. Selected as the final project model."
+      },
+      cat: {
+        name: "CatBoost",
+        accuracy: 0.7215,
+        balanced: 0.4802,
+        macro: 0.4786,
+        weighted: 0.7210,
+        seconds: 529.14,
+        recall: { no: 0.8460, minor: 0.3640, severe: 0.2305 },
+        note: "Very close to FT-Transformer and easier to explain with feature importance."
+      },
+      xgb: {
+        name: "XGBoost",
+        accuracy: 0.7176,
+        balanced: 0.4648,
+        macro: 0.4643,
+        weighted: 0.7180,
+        seconds: 165.49,
+        recall: { no: 0.8510, minor: 0.3370, severe: 0.2065 },
+        note: "Fastest training baseline, but lower macro F1 and balanced accuracy."
+      }
+    };
+
+    const sections = {
+      overview: {
+        title: "Overview",
+        copy: "Model purpose, data setup, and target design for quick briefing."
+      },
+      performance: {
+        title: "Performance",
+        copy: "Compare candidate models and explain why FT-Transformer was selected."
+      },
+      risk: {
+        title: "Risk Review",
+        copy: "Class-level weaknesses, failure modes, and responsible-use conditions."
+      },
+      deployment: {
+        title: "Deployment",
+        copy: "How the local web app should communicate predictions and limits."
+      }
+    };
+
+    const navButtons = document.querySelectorAll(".nav button");
+    const sectionEls = document.querySelectorAll(".section");
+    const statusTitle = document.getElementById("status-title");
+    const statusCopy = document.getElementById("status-copy");
+    const modelSelect = document.getElementById("model-select");
+    const metricFocus = document.getElementById("metric-focus");
+    const tableBody = document.getElementById("model-table-body");
+    const modelBadge = document.getElementById("selected-model-badge");
+    const performanceCopy = document.getElementById("performance-copy");
+    const riskHeading = document.getElementById("risk-heading");
+    const riskCopy = document.getElementById("risk-copy");
+    const riskLevel = document.getElementById("risk-level");
+    const modeButtons = document.querySelectorAll("[data-mode]");
+    const threshold = document.getElementById("threshold");
+    const thresholdSide = document.getElementById("threshold-side");
+    const thresholdValue = document.getElementById("threshold-value");
+    const thresholdLabel = document.getElementById("threshold-label");
+    const thresholdCopy = document.getElementById("threshold-copy");
+
+    function fmt(value) {
+      return Number(value).toFixed(4);
+    }
+
+    function setSection(id) {
+      navButtons.forEach((button) => button.classList.toggle("active", button.dataset.section === id));
+      sectionEls.forEach((section) => section.classList.toggle("active", section.id === id));
+      statusTitle.textContent = sections[id].title;
+      statusCopy.textContent = sections[id].copy;
+    }
+
+    function renderTable() {
+      const selected = modelSelect.value;
+      const rows = Object.entries(models)
+        .map(([id, model]) => `
+          <tr class="${id === selected ? "selected" : ""}">
+            <td><strong>${model.name}</strong></td>
+            <td>${fmt(model.accuracy)}<span class="mini-bar"><i style="width:${model.accuracy * 100}%"></i></span></td>
+            <td>${fmt(model.balanced)}<span class="mini-bar"><i style="width:${model.balanced * 100}%"></i></span></td>
+            <td>${fmt(model.macro)}<span class="mini-bar"><i style="width:${model.macro * 100}%"></i></span></td>
+            <td>${fmt(model.weighted)}<span class="mini-bar"><i style="width:${model.weighted * 100}%"></i></span></td>
+            <td>${model.seconds.toFixed(2)}</td>
+          </tr>
+        `)
+        .join("");
+      tableBody.innerHTML = rows;
+    }
+
+    function updateModel() {
+      const model = models[modelSelect.value];
+      document.querySelector("[data-metric='accuracy']").textContent = fmt(model.accuracy);
+      document.querySelector("[data-metric='macro']").textContent = fmt(model.macro);
+      document.querySelector("[data-metric='balanced']").textContent = fmt(model.balanced);
+      document.querySelector("[data-metric='severe']").textContent = fmt(model.recall.severe);
+
+      const metricCards = document.querySelectorAll(".metric-card");
+      metricCards[0].style.setProperty("--scale", model.accuracy);
+      metricCards[1].style.setProperty("--scale", model.macro);
+      metricCards[2].style.setProperty("--scale", model.balanced);
+      metricCards[3].style.setProperty("--scale", model.recall.severe);
+
+      document.getElementById("bar-no").style.width = `${model.recall.no * 100}%`;
+      document.getElementById("bar-minor").style.width = `${model.recall.minor * 100}%`;
+      document.getElementById("bar-severe").style.width = `${model.recall.severe * 100}%`;
+      document.getElementById("val-no").textContent = fmt(model.recall.no);
+      document.getElementById("val-minor").textContent = fmt(model.recall.minor);
+      document.getElementById("val-severe").textContent = fmt(model.recall.severe);
+
+      modelBadge.textContent = `Viewing ${model.name}`;
+      performanceCopy.textContent = model.note;
+      renderTable();
+      updateFocus();
+    }
+
+    function updateFocus() {
+      const focus = metricFocus.value;
+      const model = models[modelSelect.value];
+      if (focus === "accuracy") {
+        riskHeading.textContent = "Accuracy-focused reading";
+        riskLevel.textContent = "Can mislead";
+        riskCopy.textContent = `${model.name} reaches ${fmt(model.accuracy)} test accuracy, but this number is dominated by common no-injury cases.`;
+      } else if (focus === "minority") {
+        riskHeading.textContent = "Minority-class reading";
+        riskLevel.textContent = "High caution";
+        riskCopy.textContent = `Severe-injury recall is ${fmt(model.recall.severe)}. This is the key reason the model should not be used for emergency triage.`;
+      } else {
+        riskHeading.textContent = "Balanced model reading";
+        riskLevel.textContent = "Prototype";
+        riskCopy.textContent = `${model.name} should be read through macro F1, balanced accuracy, and severe recall together.`;
+      }
+    }
+
+    function updateThreshold(value) {
+      const numeric = Number(value);
+      threshold.value = numeric.toFixed(2);
+      thresholdSide.value = numeric.toFixed(2);
+      thresholdValue.textContent = numeric.toFixed(2);
+      thresholdLabel.textContent = numeric.toFixed(2);
+
+      if (numeric <= 0.20) {
+        thresholdCopy.textContent = "Low threshold: more possible severe cases are flagged, but false alarms would increase substantially.";
+      } else if (numeric >= 0.55) {
+        thresholdCopy.textContent = "High threshold: fewer false alarms, but the model would miss even more severe cases.";
+      } else {
+        thresholdCopy.textContent = "Middle threshold: a presentation setting for discussing the recall and false-alarm tradeoff.";
+      }
+    }
+
+    navButtons.forEach((button) => {
+      button.addEventListener("click", () => setSection(button.dataset.section));
+    });
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        modeButtons.forEach((item) => item.classList.toggle("active", item === button));
+        document.body.dataset.mode = button.dataset.mode;
+        if (button.dataset.mode === "technical") {
+          metricFocus.value = "minority";
+        } else {
+          metricFocus.value = "balanced";
+        }
+        updateFocus();
+      });
+    });
+
+    modelSelect.addEventListener("change", updateModel);
+    metricFocus.addEventListener("change", updateFocus);
+    threshold.addEventListener("input", (event) => updateThreshold(event.target.value));
+    thresholdSide.addEventListener("input", (event) => updateThreshold(event.target.value));
+
+    renderTable();
+    updateModel();
+    updateThreshold(threshold.value);
+  </script>
+</body>
+</html>
